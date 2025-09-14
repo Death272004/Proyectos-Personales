@@ -1,0 +1,7 @@
+# Ignorar ejecutables y compilados
+*.exe
+*.obj
+*.o
+
+# Ignorar carpetas de configuración
+.vscode/
