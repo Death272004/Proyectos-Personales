@@ -1,10 +1,14 @@
-# Proyectos-Personales
-Este repositorio cuenta con proyectos de los cuales he acumulado tanto en mi vida académica como corriente. 
 # Ignorar ejecutables
 *.exe
 *.out
 
-# Ignorar archivos temporales de compilación
+# Ignorar objetos compilados
 *.o
 *.obj
+
+# Ignorar logs
 *.log
+
+# Ignorar carpetas de IDE
+.vscode/
+*.code-workspace
