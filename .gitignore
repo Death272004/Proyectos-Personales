@@ -1,0 +1,42 @@
+# -------------------------------
+# Archivos compilados y ejecutables
+# -------------------------------
+*.exe
+*.out
+*.dll
+*.so
+
+# Archivos objeto y temporales
+*.o
+*.obj
+*.a
+*.lib
+*.log
+*.tmp
+*.pch
+
+# -------------------------------
+# Carpetas de compilación
+# -------------------------------
+/build/
+/bin/
+/Debug/
+/Release/
+
+# -------------------------------
+# Archivos del IDE Visual Studio Code
+# -------------------------------
+.vscode/
+*.code-workspace
+
+# -------------------------------
+# Archivos de sistema
+# -------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -------------------------------
+# Gitignore propio de Git
+# -------------------------------
+.gitignore
