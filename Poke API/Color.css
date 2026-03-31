@@ -1,0 +1,424 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap");
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    background-image: radial-gradient(circle, #000000 1px, transparent 1px);
+    background-size: 20px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 30px 20px;
+    font-family: 'Montserrat', sans-serif;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* Body de la pokebola */
+.contenedor-all {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    min-height: 600px;
+}
+.pokebola { 
+    width: 525px;
+    height: 525px;
+    border-radius: 100%; 
+    border: 12.5px solid #000000;
+    box-shadow: #828a89 20px 15px 0px 0px ;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    overflow: hidden;
+}
+.pokebola-rojo {
+    width: 100%;
+    height: 200px;
+    flex: 1;
+    background-color: #fa3e45 ;
+    border-bottom: #000000 20px solid;
+    overflow: hidden;
+}
+.pokebola-blanco {
+    width: 100%;
+    height: 200px;
+    flex: 1;
+    border-top: #000000 20px solid;
+    background-color: #FFFFFF;
+}
+.contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 525px;
+    rotate: -20deg;
+    opacity: 0.9;
+    z-index: 1;
+}
+.circulo {
+    width: 125px;
+    height: 125px;
+    background-color: #FFFFFF;
+    border: 15px solid #000000;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute; 
+}
+
+
+/* Contenedor del formulario */
+.contenedor-form {
+    width: 500px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+.title {
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: aqua;
+    color: #333333;
+    border: #000000 5px solid;
+    rotate: -5deg;
+    margin: 10px;
+    padding: 10px 0 10px 0;
+    box-shadow: #000000 5px 5px 0px 0px ;
+}
+
+
+/* Botones y select */
+button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    border: 5px solid #000000;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    margin: 5px;
+    box-shadow: #000000 5px 5px 0px 0px ;
+}
+.btn-buscard {
+    width: 115px;
+    height: 60px;
+    background-color: aqua;
+}
+.btn-historico {
+    width: 120px;
+    height: 60px;
+}
+.btn-vs {
+    width: 70px;
+    height: 60px;
+    margin: 20px auto 0;
+}
+.btn-favoritos {
+    width: 125px;
+    height: 60px;
+}
+.select-busqueda{
+    width: 150px;
+    position: relative;
+    z-index: 3; /* encima de la pokebola */
+    height: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    border: 5px solid #000000;
+    background-color: #bbfd6b;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 5px;
+    box-shadow: #000000 5px 5px 0px 0px ;
+}
+.input-text {
+    width: 200px;
+    height: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    border: 5px solid #000000;
+    cursor: text;
+    box-shadow: #000000 5px 5px 0px 0px ;
+}
+.btn-buscar {
+    width: 100px;
+    height: 50px;
+    background-color: #fa3e45 ;
+    color: #ffffff;
+}
+
+.btn-buscar:hover {
+    background-color: #e02f36;
+    box-shadow: #000000 7px 7px 0px 0px ;
+}
+
+.pokemon-info {
+    width: 100%;
+    max-width: 500px;
+    background-color: #ffffff;
+    border: 5px solid #000000;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: #000000 5px 5px 0px 0px ;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Poke info extras */
+.poke-header {
+    width: 100%;
+    text-align: center;
+    border-bottom: 3px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.poke-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+.poke-id {
+    color: #888;
+    font-size: 1.5rem;
+}
+.poke-sprite {
+    width: 200px;
+    height: 200px;
+    image-rendering: pixelated;
+    background: #f0f0f0;
+    border-radius: 50%;
+    border: 5px solid #333;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* Badges (Tipos y Habilidades) */
+.poke-atributos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.poke-seccion {
+    text-align: center;
+}
+.poke-seccion-acciones {
+    text-align: center;
+    margin-top: 10px;
+}
+.btn-agregar-favorito {
+    background-color: #ffeff2;
+    color: #d10038;
+    border: 3px solid #d10038;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 0 #d10038;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.btn-agregar-favorito:hover {
+    background-color: #d10038;
+    color: #ffffff;
+}
+.poke-seccion h3 {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    color: #555;
+    text-transform: uppercase;
+}
+.badges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+.badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: white;
+    border: 2px solid #000;
+    text-shadow: 1px 1px 0 #000;
+    box-shadow: 2px 2px 0 0 #000;
+    background-color: #555;
+}
+.badge.habilidad {
+    background-color: #f39c12;
+}
+.tipo-normal { background-color: #A8A878; }
+.tipo-fire { background-color: #F08030; }
+.tipo-water { background-color: #F08030; }
+.tipo-electric { background-color: #6890F0; }
+.tipo-grass { background-color: #78C850; }
+.tipo-ice { background-color: #98D8D8; }
+.tipo-fighting { background-color: #C03028; }
+.tipo-poison { background-color: #A040A0; }
+.tipo-ground { background-color: #E0C068; }
+.tipo-flying { background-color: #F8D030; }
+.tipo-psychic { background-color: #A890F0; }
+.tipo-bug { background-color: #B8A038; }
+.tipo-rock { background-color: #705898; }
+.tipo-ghost { background-color: #7038F8; }
+.tipo-dragon { background-color: #705848; }
+.tipo-dark { background-color: #B8B8D0; }
+.tipo-steel { background-color: #EE99AC; }
+.tipo-fairy { background-color: #68A090; }
+
+.poke-stats {
+    width: 100%;
+    margin-top: 10px;
+}
+.poke-stats h3 {
+    text-align: center;
+    border-bottom: 3px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+.stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+.stat-name {
+    width: 110px;
+    text-align: right;
+    padding-right: 10px;
+    color: #555;
+}
+.stat-value {
+    width: 35px;
+    text-align: right;
+    padding-right: 10px;
+}
+.stat-bar-bg {
+    flex-grow: 1;
+    height: 15px;
+    background-color: #ddd;
+    border: 2px solid #000;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.stat-bar-fill {
+    height: 100%;
+    background-color: #4CAF50;
+    border-right: 2px solid #000;
+    transition: width 0.5s ease-out;
+}
+
+/* --- Evoluciones --- */
+.poke-evoluciones {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 2px dashed #444;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.poke-evoluciones h3 {
+    margin-bottom: 15px;
+    color: #ffd700;
+    font-size: 1.2em;
+    text-shadow: 1px 1px 2px #000;
+    text-align: center;
+}
+
+.evoluciones-lista {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 12px;
+}
+
+.evo-ite {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    width: 75px;
+    cursor: pointer; 
+}
+
+.evo-ite:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    background-color: rgba(255, 255, 255, 0.3); 
+}
+
+.evo-ite.evo-actual {
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+.evo-ite img {
+    width: 55px;
+    height: 55px;
+    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+}
+
+.evo-ite span {
+    font-size: 0.8em; 
+    color: white;
+    font-weight: bold;
+    margin-top: 5px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.evo-flecha {
+    font-size: 1.2em;
+    color: #fff;
+    opacity: 0.7;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.8));
+}

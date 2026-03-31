@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proyecto Final</title>
+    <link rel="stylesheet" href="Color.css" />
+    <script src="PokeAPI.js" defer></script>
+  </head>
+
+  <body>
+    <div class="contenedor-all">
+      <div class="contenedor-form">
+        <!------------------ TITULO Y BOTONES PRINCIPALES ------------------>
+        <h1 class="title" id="titulo-principal">POKEMON FINDER</h1>
+        <div class="linea1">
+          <button type="button" class="btn-buscard">🔍Buscar</button>
+          <button type="button" class="btn-historico">📜Histórico</button>
+          <button type="button" class="btn-vs">⚔️​Vs</button>
+          <button type="button" class="btn-favoritos">❤️​Favoritos</button>
+        </div>
+        <div class="linea2">
+          <select class="select-busqueda" id="tipo-busqueda">
+            <option value="nombre">👾Pokémon</option>
+            <option value="habilidad">🌟Habilidad</option>
+          </select>
+          <input
+            type="text"
+            class="input-text"
+            placeholder="NOMBRE, ID O HABILIDAD..."
+          />
+          <button type="button" class="btn-buscar">Buscar</button>
+        </div>
+        <!-- Contenedor de Resultados (Dinámico) -->
+        <div
+          id="resultado-container"
+          class="resultado-container"
+          style="display: none"
+        >
+          <div class="pokemon-info"></div>
+        </div>
+      </div>
+      <div class="contenedor">
+        <div class="circulo"></div>
+        <div class="pokebola">
+          <div class="pokebola-rojo"></div>
+          <div class="pokebola-blanco"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
