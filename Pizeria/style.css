@@ -1,5 +1,11 @@
+/* =========================================
+   1. VARIABLES & FUENTES
+   ========================================= */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;1,300&display=swap");
 
+/* =========================================
+   2. RESETEO GLOBAL & BASE
+   ========================================= */
 * {
     margin: 0;
     padding: 0;
@@ -17,13 +23,76 @@ body {
     padding: 40px 20px;
 }
 
-.Contenedor-Menu {
+/* =========================================
+   3. CONTENEDORES PRINCIPALES (LAYOUT)
+   ========================================= */
+.img-fondo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.15; /* Así no será tan brillante y no opacará las letras blancas */
+    filter: blur(2px); /* Añade un fino desenfoque */
+}
+
+.Contenedor-General {
+    width: 100%;
+    padding-right: 20px;
+    padding-left: 20px;
+    border: 1px solid rgba(238, 233, 233, 0.3);
+}
+
+.Contenedor-bar {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-    background-color: #0d1117;
+    padding-top: 10px;
+    padding-left: 10px;
+    border: 1px solid rgba(255, 252, 252, 0.3);
 }
 
+.Contenedor-Contenido-General {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 100%;
+    margin: 40px auto 0;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(253, 251, 243, 0.3);
+    gap: 40px;
+}
+
+.Contenedor-Contenido {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    color: #e0e0e0;
+    border: #e0e0e0 1px solid;
+    top: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+.Contenedor-Menu {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    gap: 10px;
+    color: #e0e0e0;
+    border: #e0e0e0 1px solid;
+    top: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   4. CABECERA & NAVEGACIÓN (HEADER/NAV)
+   ========================================= */
 nav {
     display: flex;
     flex-direction: column;
@@ -96,4 +165,136 @@ nav ul li a:hover {
 
 nav ul li a:hover::after {
     width: 100%;
+}
+
+/* =========================================
+   5. CONTENIDO PRINCIPAL Y TEXTOS
+   ========================================= */
+.Contenedor-Contenido h2 {
+    color: #d4af37;
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.Contenedor-Contenido p {
+    color: #c0c0c0;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.Contenedor-Menu {
+    text-align: start;
+    padding: 20px;
+}
+
+.Contenedor-Menu h3 {
+    color: #d4af37;
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.Contenedor-Menu-Encabezado {
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    border: #eef0f1 1px solid;
+}
+.Contenedor-Menu ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.Contenedor-Menu ul li {
+    font-size: 1rem;
+    color: #e0e0e0;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.img-pizza {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+    margin: 15px auto;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(212, 175, 55, 0.3); /* Borde dorado tenue para combinar */
+    object-fit: cover;
+}
+
+/* =========================================
+   6. DISEÑO RESPONSIVO (MEDIA QUERIES)
+   ========================================= */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    .Logo h1 {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+
+    .Logo p {
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    nav ul li a {
+        font-size: 0.8rem;
+        padding: 8px 0;
+    }
+
+    .Contenedor-Contenido h2 {
+        font-size: 1.4rem;
+        letter-spacing: 2px;
+    }
+
+    .Contenedor-Contenido p {
+        font-size: 0.9rem;
+        padding: 0 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .Logo h1 {
+        font-size: 1.6rem;
+        letter-spacing: 3px;
+    }
+
+    nav ul {
+        gap: 15px;
+        width: 100%;
+    }
+
+    nav ul li {
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 5px;
+    }
+    
+    nav ul li:last-child {
+        border-bottom: none;
+    }
 }
