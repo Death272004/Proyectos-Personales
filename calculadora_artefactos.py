@@ -1,6 +1,22 @@
-import tkinter as tk
-from tkinter import ttk, messagebox, scrolledtext
+import math
 import random
+
+# Tkinter puede no estar disponible (por ejemplo en un servidor sin display ni
+# con Tk sin instalar). Lo importamos dentro de un try para que el archivo se
+# pueda cargar igualmente; el bloque principal de abajo se encarga de avisar
+# con un mensaje claro en lugar de mostrar un traceback.
+try:
+    import tkinter as tk
+    from tkinter import ttk, messagebox, scrolledtext
+except ImportError:
+    tk = ttk = messagebox = scrolledtext = None
+
+# Número de simulaciones que se usan para calcular las probabilidades.
+# Se puede cambiar desde aquí sin tocar el resto del código.
+SIMULACIONES = 10000
+
+# Stats que se manejan como números enteros (no son porcentuales)
+STATS_PLANOS = ("Vida Plana", "Ataque Plano", "Defensa Plana", "Maestria Elemental")
 
 # Valores posibles al subir un substat en un artefacto de 5 estrellas.
 VALORES_SUBSTATS = {
@@ -48,6 +64,8 @@ MAIN_STATS_POR_TIPO = {
 }
 
 class AplicacionGenshin:
+    """Interfaz gráfica (Tkinter) para simular y calcular probabilidades de artefactos 5★."""
+
     def __init__(self, root):
         self.root = root
         self.root.title("Simulador y Calculadora de Artefactos Genshin Impact")
@@ -162,11 +180,16 @@ class AplicacionGenshin:
                 cb.set("(Ninguno)")
 
     def print_consola(self, texto):
+        """Escribe una línea en la consola inferior de la ventana y baja hasta el final."""
         self.consola.insert(tk.END, texto + "\n")
         self.consola.see(tk.END)
 
     def obtener_substats_usuario(self):
-        """Retorna un diccionario leyendo los substats y los valores numéricos ingresados por el usuario"""
+        """Retorna un diccionario leyendo los substats y los valores numéricos ingresados por el usuario.
+
+        Si algún valor está vacío, no es numérico o está fuera de rango, muestra
+        un error con messagebox y retorna None para detener la simulación.
+        """
         substats = {}
         for i, cb in enumerate(self.comboboxes):
             stat = cb.get()
@@ -178,11 +201,37 @@ class AplicacionGenshin:
                 try:
                     # Convertimos a flotante el valor que el jugador escribió
                     valor = float(valor_str)
-                    substats[stat] = valor
                 except ValueError:
                     messagebox.showerror("Error", f"El valor '{valor_str}' no es válido. Ingresa un número (usa punto para decimales).")
                     return None
+
+                # El número tiene que tener sentido para el stat que elegiste
+                error = self.validar_valor_substat(stat, valor, valor_str)
+                if error:
+                    messagebox.showerror("Valor inválido", error)
+                    return None
+
+                substats[stat] = valor
         return substats
+
+    def validar_valor_substat(self, stat, valor, valor_str):
+        """Revisa que el valor escrito corresponda al stat elegido. Devuelve el mensaje de error o None."""
+        # El valor debe ser positivo y finito (esto también descarta "nan" e "inf")
+        if not math.isfinite(valor) or valor <= 0:
+            return f"El valor de '{stat}' debe ser mayor que 0 (escribiste '{valor_str}')."
+
+        # Límite superior con margen: el doble de lo que puede dar una tirada
+        limite = max(VALORES_SUBSTATS[stat]) * 2
+
+        # Los stats planos (Vida Plana, Ataque Plano, etc.) siempre son enteros
+        if stat in STATS_PLANOS and not valor.is_integer():
+            ejemplo = int(max(VALORES_SUBSTATS[stat]))
+            return f"'{stat}' debe ser un número entero sin decimales (ejemplo: {ejemplo})."
+
+        if valor > limite:
+            return f"'{stat}' está fuera de rango: el máximo razonable es {limite:.1f} (escribiste '{valor_str}')."
+
+        return None
 
     def agregar_cuarto_stat(self, substats_actuales):
         """Agrega un 4to stat basándose en las probabilidades oficiales, evitando repeticiones y al Main Stat"""
@@ -197,6 +246,7 @@ class AplicacionGenshin:
         return nuevo_stat, valor_base
 
     def simular_a_20(self):
+        """Simula la subida del artefacto desde +0 hasta +20 y muestra cada mejora en la consola."""
         self.consola.delete('1.0', tk.END) # Limpiar consola
         substats = self.obtener_substats_usuario()
         
@@ -226,6 +276,7 @@ class AplicacionGenshin:
             if nivel == 4 and len(substats) == 3:
                 nuevo_stat, valor_base = self.agregar_cuarto_stat(substats)
                 self.print_consola(f"✨ ¡Se descubrió un nuevo stat: {nuevo_stat} ({valor_base})!")
+                self.print_consola("   ⚠️ La mejora de +4 se gastó en revelar este stat (no en subir otro).")
             else:
                 # Subir un stat existente
                 stat_elegido = random.choice(list(substats.keys()))
@@ -237,7 +288,11 @@ class AplicacionGenshin:
         for stat, valor in substats.items():
             self.print_consola(f"🔹 {stat}: {valor:.1f}" if "%" in stat else f"🔹 {stat}: {int(valor)}")
 
+        self.print_consola(f"\n💡 Este fue un solo camino. Para ver estadísticas pulsa "
+                           f"'Ver Probabilidades' (usa {SIMULACIONES} simulaciones).")
+
     def calcular_probabilidades(self):
+        """Simula muchas subidas a +20 y muestra en la consola el % de mejoras que recibe cada substat."""
         self.consola.delete('1.0', tk.END)
         substats_iniciales = self.obtener_substats_usuario()
         
@@ -250,7 +305,7 @@ class AplicacionGenshin:
             messagebox.showwarning("Faltan datos", "Debes ingresar al menos 3 estadísticas (substats).")
             return
 
-        simulaciones = 10000
+        simulaciones = SIMULACIONES
         resultados = {stat: 0 for stat in VALORES_SUBSTATS.keys()}
         
         self.print_consola(f"Simulando {simulaciones} veces el camino de tu artefacto...")
@@ -265,11 +320,15 @@ class AplicacionGenshin:
             # 5 mejoras posibles
             for tirada in range(1, 6): # Nivel 4, 8, 12, 16, 20
                 if tirada == 1 and len(stats_temp) == 3:
-                    # Simular la revelación del nivel 4 (No puede ser el Main Stat)
+                    # Simular la revelación del nivel 4 (No puede ser el Main Stat).
+                    # En el juego la mejora de +4 se gasta en revelar el 4to stat,
+                    # así que esa revelación también cuenta como una mejora del stat
+                    # revelado: de este modo las 5 tiradas siempre suman 5 mejoras.
                     opciones_validas = [s for s in PESOS_SUBSTATS.keys() if s not in stats_temp and s != main_stat]
                     pesos = [PESOS_SUBSTATS[s] for s in opciones_validas]
                     nuevo_stat = random.choices(opciones_validas, weights=pesos, k=1)[0]
                     stats_temp.append(nuevo_stat)
+                    resultados[nuevo_stat] += 1 # La revelación de +4 cuenta como mejora
                 else:
                     stat_mejorado = random.choice(stats_temp)
                     resultados[stat_mejorado] += 1
@@ -300,6 +359,22 @@ class AplicacionGenshin:
             self.print_consola("➡️ CONSEJO: Riesgo alto. Úsalo como experiencia (food).")
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = AplicacionGenshin(root)
-    root.mainloop()
+    try:
+        # Si Tkinter no se pudo importar al cargar el archivo, avisamos con un
+        # mensaje claro en lugar de dejar que aparezca un traceback.
+        if tk is None:
+            raise ImportError("tkinter no está disponible")
+
+        root = tk.Tk()
+        app = AplicacionGenshin(root)
+        root.mainloop()
+    except ImportError:
+        print("❌ No se encontró Tkinter (¿está instalado el paquete 'python3-tk'?).")
+        print("   Esta calculadora necesita Tkinter para mostrar su interfaz gráfica.")
+    except EnvironmentError as error:
+        # Fallos del sistema operativo al intentar abrir la ventana
+        print(f"❌ No se pudo iniciar la ventana: {error}")
+    except tk.TclError as error:
+        # Tkinter existe pero no hay display gráfico (servidor sin pantalla)
+        print(f"❌ No hay display gráfico disponible: {error}")
+        print("   Ejecuta este programa en una computadora con escritorio gráfico.")
