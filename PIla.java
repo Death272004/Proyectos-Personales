@@ -1,7 +1,7 @@
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Scanner;
-import java.util.Stack; // <-- Libreria para usar pila 
+import java.util.Stack; // <-- Librería para usar pila 
 
 public class PIla {
     public static void main(String[] args) {
@@ -34,28 +34,30 @@ public class PIla {
                 System.out.println("Selecciona 2 para usar cola.");
                 System.out.println("Selecciona 3 para terminar el programa.");
                 menuPrincipal = sc.nextInt();
-            } while (menuPrincipal < 0 && menuPrincipal > 3);
+            } while (menuPrincipal < 1 || menuPrincipal > 3);
 
             // Selecion de menu principal
             switch (menuPrincipal) {
                 case 1:
+                    // se reinicia el repetidor de la pila para poder volver a entrar
+                    programP = 0;
                     // Repetidor de la pila
                     do {
                         // Repetidor del menu pila
                         do {
                             System.out.println(" ____________MENU____________");
-                            System.out.println(" Selecciona 1 para Ingresar numero a la pila.");
+                            System.out.println(" Selecciona 1 para Ingresar número a la pila.");
                             System.out.println(" Selecciona 2 para Mostrar Pila.");
-                            System.out.println(" Selecciona 3 para Eliminar ultimo numero de la pila.");
+                            System.out.println(" Selecciona 3 para Eliminar último número de la pila.");
                             System.out.println(" Selecciona 4 para Salir de pila.");
                             menuPila = sc.nextInt();
-                        } while (menuPila < 0 && menuPila > 5);
+                        } while (menuPila < 1 || menuPila > 4);
 
                         // Selecion de menu pila
                         switch (menuPila) {
                             case 1:
                                 System.out.println("");
-                                System.out.println("------Caso selecionado es: " + menuPila + "-------");
+                                System.out.println("------Caso seleccionado es: " + menuPila + "-------");
                                 System.out.println("");
 
                                 // Repetidor para verificar que la cantidad de elementos a ingresar no supere el
@@ -63,8 +65,8 @@ public class PIla {
                                 do {
                                     // Se muestra el limite del contenedor y se pregunta cuantos elementos va a
                                     // ingresar
-                                    System.out.println("limite del contenedor." + max);
-                                    System.out.println("Cuantos Elementos desea ingresar a la pila.");
+                                    System.out.println("límite del contenedor." + max);
+                                    System.out.println("Cuántos elementos desea ingresar a la pila.");
                                     ingresoPila = sc.nextInt();
                                     // Si la cantidad de elementos a ingresar es mayor al contenedor
                                     // o es negativa se le manda un mensaje al usuario
@@ -72,37 +74,40 @@ public class PIla {
                                         System.out.println("");
                                         System.out.println("Cantidad nula.");
                                         System.out.println(
-                                                "Porfavor ingrese una cantidad dentro del maximo del contenedor.");
+                                                "Por favor ingrese una cantidad dentro del máximo del contenedor.");
                                         System.out.println("");
                                     }
                                 } while (ingresoPila > max || ingresoPila <= 0);
 
+                                // se reinician las variables de control para esta operacion
+                                errores = 0;
+                                total = 0;
                                 // Repetidor para ingresar los elementos a la pila
                                 // se inicializa la variable x en 0
                                 int x = 0;
                                 do {
                                     // se incrementa la variable x en 1
                                     x++;
-                                    // Si la pila ya esta llena entoces se le manda un mensaje al usuario.
+                                    // Si la pila ya esta llena entonces se le manda un mensaje al usuario.
                                     if (pila.size() == max) {
                                         System.out.println("El  estado de la pila actual es:" + pila);
-                                        System.out.println("limite del contenedor.");
-                                        // se iguala errores a 1 para que no entre al else if
+                                        System.out.println("límite del contenedor.");
+                                        // se iguala errores a 1 para salir del repetidor
                                         errores = 1;
-                                        // si no esta lleno se permitira la ingrecion de elementos
-                                    } else if (x <= max) {
-                                        // se le pide al usuario que ingrese un numero a la pila
-                                        System.out.print("Ingrese un numero " + x + " a la pila:");
+                                        // si no esta lleno se permitira la ingresión de elementos
+                                    } else {
+                                        // se le pide al usuario que ingrese un número a la pila
+                                        System.out.print("Ingrese un número " + x + " a la pila:");
                                         cantidad = sc.nextInt();
                                         // se acumula los elementos ingresados
                                         total += cantidad;
 
-                                        // Si el total de elementos acumulados es mayor a 99 entoces
+                                        // Si el total de elementos acumulados es mayor a 99 entonces
                                         // se le manda un mensaje al usuario.
                                         if (total >= 99) {
                                             System.out.println("");
-                                            System.out.println("El acumulado supero el limite del contenedor.");
-                                            System.out.println("Profavor introduzca valore mas bajos.");
+                                            System.out.println("El acumulado superó el límite del contenedor.");
+                                            System.out.println("Por favor introduzca valores más bajos.");
                                             // se le resta a total la ultima cantidad ingresada
                                             total -= cantidad;
                                             System.out.println("");
@@ -113,10 +118,10 @@ public class PIla {
                                         // se muestra el estado actual de la pila
                                         System.out.println("El  estado de la pila actual es:" + pila);
                                         System.out.println("");
-                                        // Si x es igual a la cantidad maxima del contenedor
-                                        // se le manda un mensaje al usuario
+                                        // Si x es igual a la cantidad pedida o a la cantidad maxima
+                                        // del contenedor se le manda un mensaje al usuario
                                         if (x == max || x == ingresoPila) {
-                                            System.out.println("Alcanzo la cantidad de elemento introducido");
+                                            System.out.println("Alcanzó la cantidad de elemento introducido");
                                             System.out.println("");
                                             errores = 1;
                                         }
@@ -126,10 +131,10 @@ public class PIla {
 
                             case 2:
                                 System.out.println("");
-                                System.out.println("------Caso selecionado es: " + menuPila + "-------");
+                                System.out.println("------Caso seleccionado es: " + menuPila + "-------");
                                 System.out.println("");
                                 // Mostrar si la pila esta vacia
-                                System.out.println("La pila esta vacia?:" + pila.isEmpty());
+                                System.out.println("La pila está vacía?:" + pila.isEmpty());
                                 // Mostrar los elementos de la pila
                                 System.out.println("El  estado de la pila actual es:" + pila);
                                 // Mostrar el elemento que esta en la parte superior de la pila
@@ -141,7 +146,7 @@ public class PIla {
 
                             case 3:
                                 System.out.println("");
-                                System.out.println("------Caso selecionado es: " + menuPila + "-------");
+                                System.out.println("------Caso seleccionado es: " + menuPila + "-------");
                                 System.out.println("");
                                 // Verificar si la pila no esta vacia
                                 if (!pila.isEmpty()) {
@@ -149,7 +154,7 @@ public class PIla {
                                     int confirmacion = 0;
                                     // Repetidor para verificar que la opcion ingresada sea valida
                                     do {
-                                        System.out.println("¿Quiere eliminar el ultimo elemento?");
+                                        System.out.println("¿Quiere eliminar el último elemento?");
                                         System.out.println("1. Si, 2. No ");
                                         eliminarPila = sc.nextInt();
                                         // Si la opcion es 1 o 2 se iguala confirmacion a 1 para salir del repetidor
@@ -157,7 +162,7 @@ public class PIla {
                                             confirmacion = 1;
                                         } else {
                                             System.out.println("");
-                                            System.out.println("Opcion no valida, profavor ingrese 1 o 2.");
+                                            System.out.println("Opción no válida, por favor ingrese 1 o 2.");
                                             System.out.println("");
                                         }
                                     } while (confirmacion == 0);
@@ -186,7 +191,7 @@ public class PIla {
                             case 4:
                                 // Salir del menu pila
                                 System.out.println("");
-                                System.out.println("------Caso selecionado es: " + menuPila + "-------");
+                                System.out.println("------Caso seleccionado es: " + menuPila + "-------");
                                 System.out.println("");
                                 System.out.println("Se ha salido de la pila.");
                                 System.out.println("");
@@ -199,60 +204,69 @@ public class PIla {
                     break;
 
                 case 2:
+                    // se reinicia el repetidor de la cola para poder volver a entrar
+                    programC = 0;
                     // Repetidor cola
                     do {
                         // Repetidor del menu cola
                         do {
                             System.out.println(" ____________MENU____________");
-                            System.out.println(" Selecciona 1 para Ingresar numero a la cola.");
+                            System.out.println(" Selecciona 1 para Ingresar número a la cola.");
                             System.out.println(" Selecciona 2 para Mostrar cola.");
-                            System.out.println(" Selecciona 3 para Eliminar ultimo numero de la cola.");
+                            System.out.println(" Selecciona 3 para Eliminar último número de la cola.");
                             System.out.println(" Selecciona 4 para Salir de cola.");
                             menuCola = sc.nextInt();
-                        } while (menuCola < 0 && menuCola > 5);
+                        } while (menuCola < 1 || menuCola > 4);
 
                         // Seleccion de menu cola
                         switch (menuCola) {
                             case 1:
                                 System.out.println("");
-                                System.out.println("------Caso selecionado es: " + menuCola + "-------");
+                                System.out.println("------Caso seleccionado es: " + menuCola + "-------");
                                 System.out.println("");
                                 // Repetidor para verificar que la cantidad de elementos a ingresar no supere el
                                 // contenedor y no sea negativa
                                 do {
-                                    System.out.println("limite del contenedor." + max);
-                                    System.out.println("Cuantos Elementos desea ingresar a la cola.");
+                                    System.out.println("límite del contenedor." + max);
+                                    System.out.println("Cuántos elementos desea ingresar a la cola.");
                                     ingresoCola = sc.nextInt();
 
                                     if (ingresoCola > max || ingresoCola <= 0) {
                                         System.out.println("");
                                         System.out.println("Cantidad nula.");
                                         System.out.println(
-                                                "Porfavor ingrese una cantidad dentro del maximo del contenedor.");
+                                                "Por favor ingrese una cantidad dentro del máximo del contenedor.");
                                         System.out.println("");
                                     }
                                 } while (ingresoCola > max || ingresoCola <= 0);
+                                // se reinician las variables de control para esta operacion
+                                errores = 0;
+                                total = 0;
+                                // Repetidor para ingresar los elementos a la cola
+                                // se inicializa la variable j en 0
                                 int j = 0;
                                 do {
+                                    // se incrementa la variable j en 1
                                     j++;
+                                    // Si la cola ya esta llena entonces se le manda un mensaje al usuario.
                                     if (cola.size() == max) {
                                         System.out.println("El  estado de la cola actual es:" + cola);
-                                        System.out.println("limite del contenedor.");
-                                        // se iguala errores a 1 para que no entre al else if
+                                        System.out.println("límite del contenedor.");
+                                        // se iguala errores a 1 para salir del repetidor
                                         errores = 1;
-                                        // si no esta lleno se permitira la ingrecion de elementos
-                                    } else if (j <= max) {
-                                        // se le pide al usuario que ingrese un numero a la cola
-                                        System.out.println("Ingrese un numero " + j + " a la cola.");
+                                        // si no esta lleno se permitira la ingresión de elementos
+                                    } else {
+                                        // se le pide al usuario que ingrese un número a la cola
+                                        System.out.println("Ingrese un número " + j + " a la cola.");
                                         cantidad = sc.nextInt();
                                         // se acumula los elementos ingresados
                                         total = total + cantidad;
-                                        // Si el total de elementos acumulados es mayor a 99 entoces
+                                        // Si el total de elementos acumulados es mayor a 99 entonces
                                         // se le manda un mensaje al usuario.
                                         if (total >= 99) {
                                             System.out.println("");
-                                            System.out.println("El acumulado supero el limite del contenedor.");
-                                            System.out.println("Profavor introduzca valore mas bajos.");
+                                            System.out.println("El acumulado superó el límite del contenedor.");
+                                            System.out.println("Por favor introduzca valores más bajos.");
                                             // se le resta a total la ultima cantidad ingresada
                                             total -= cantidad;
                                             System.out.println("");
@@ -263,10 +277,10 @@ public class PIla {
                                         // se muestra el estado actual de la cola
                                         System.out.println("El  estado de la cola actual es:" + cola);
                                         System.out.println("");
-                                        // Si j es igual a la cantidad maxima del contenedor
-                                        // se le manda un mensaje al usuario
+                                        // Si j es igual a la cantidad pedida o a la cantidad maxima
+                                        // del contenedor se le manda un mensaje al usuario
                                         if (j == max || j == ingresoCola) {
-                                            System.out.println("Alcanzo la cantidad de elemento introducido");
+                                            System.out.println("Alcanzó la cantidad de elemento introducido");
                                             System.out.println("");
                                             errores = 1;
                                         }
@@ -276,10 +290,10 @@ public class PIla {
 
                             case 2:
                                 System.out.println("");
-                                System.out.println("------Caso selecionado es: " + menuCola + "-------");
+                                System.out.println("------Caso seleccionado es: " + menuCola + "-------");
                                 System.out.println("");
                                 // Mostrar si la cola esta vacia
-                                System.out.println("La cola esta vasia?:" + cola.isEmpty());
+                                System.out.println("La cola está vacía?:" + cola.isEmpty());
                                 // Mostrar el elemento que esta en la parte frontal de la cola
                                 System.out.println("El  estado de la cola actual es:" + cola);
                                 // Mostrar los elementos de la cola
@@ -291,7 +305,7 @@ public class PIla {
 
                             case 3:
                                 System.out.println("");
-                                System.out.println("------Caso selecionado es: " + menuCola + "-------");
+                                System.out.println("------Caso seleccionado es: " + menuCola + "-------");
                                 System.out.println("");
                                 // Verificar si la cola no esta vacia
                                 if (!cola.isEmpty()) {
@@ -307,7 +321,7 @@ public class PIla {
                                             confirmacionC = 1;
                                         } else {
                                             System.out.println("");
-                                            System.out.println("Opcion no valida, profavor ingrese 1 o 2.");
+                                            System.out.println("Opción no válida, por favor ingrese 1 o 2.");
                                             System.out.println("");
                                         }
                                     } while (confirmacionC == 0);
@@ -329,16 +343,16 @@ public class PIla {
                                             break;
                                     }
                                 } else {
-                                    System.out.println("La cola está vacía, no se puede eliminar ningun elemento.");
+                                    System.out.println("La cola está vacía, no se puede eliminar ningún elemento.");
                                 }
                                 break;
 
                             case 4:
                                 // Salir del menu cola
                                 System.out.println("");
-                                System.out.println("------Caso selecionado es: " + menuCola + "-------");
+                                System.out.println("------Caso seleccionado es: " + menuCola + "-------");
                                 System.out.println("");
-                                System.out.println("Sa a salido de la cola.");
+                                System.out.println("Se ha salido de la cola.");
                                 System.out.println("");
                                 // se iguala programC a 1 para salir del repetidor de la cola
                                 programC = 1;
@@ -351,7 +365,7 @@ public class PIla {
                 case 3:
 
                     System.out.println("");
-                    System.out.println("Sa a salido del programa.");
+                    System.out.println("Se ha salido del programa.");
                     System.out.println("");
                     principal = 1;
             }
