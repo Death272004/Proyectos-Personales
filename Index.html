@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Proyecto Final</title>
+    <title>Pokémon Finder</title>
     <link rel="stylesheet" href="Color.css" />
     <script src="PokeAPI.js" defer></script>
   </head>
@@ -16,8 +16,8 @@
         <div class="linea1">
           <button type="button" class="btn-buscard">🔍Buscar</button>
           <button type="button" class="btn-historico">📜Histórico</button>
-          <button type="button" class="btn-vs">⚔️​Vs</button>
-          <button type="button" class="btn-favoritos">❤️​Favoritos</button>
+          <button type="button" class="btn-vs">⚔️Vs</button>
+          <button type="button" class="btn-favoritos">❤️Favoritos</button>
         </div>
         <div class="linea2">
           <select class="select-busqueda" id="tipo-busqueda">
@@ -26,6 +26,7 @@
           </select>
           <input
             type="text"
+            id="busqueda-input"
             class="input-text"
             placeholder="NOMBRE, ID O HABILIDAD..."
           />

@@ -1,11 +1,24 @@
+// Escapa los caracteres especiales de HTML para poder insertar valores que
+// vienen de la API dentro de atributos en línea (onclick, title, alt, src...)
+// sin que rompan el HTML ni permitan inyectar código extra
+function escaparHTML(valor) {
+    return String(valor === null || valor === undefined ? '' : valor)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/`/g, '&#96;');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const buscarBtn = document.querySelector('.btn-buscar');
-    const buscarBtnAlt = document.querySelector('.btn-buscard');
-    const inputText = document.querySelector('.input-text');
+    const limpiarBusquedaBtn = document.querySelector('.btn-buscard');
+    const inputText = document.getElementById('busqueda-input') || document.querySelector('.input-text');
     const tipoBusqueda = document.querySelector('.select-busqueda');
 
     function manejarClickBuscar() {
-        if (!inputText) return console.error('No se encontró el input `.input-text`.');
+        if (!inputText) return console.error('No se encontró el input de búsqueda (#busqueda-input).');
         const busqueda = (inputText.value || '').toLowerCase();
         const tipo = tipoBusqueda ? tipoBusqueda.value : null;
         if (!busqueda) {
@@ -18,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             buscarPokemon(busqueda);
         }
     }
-    
+
     function resetearVista() {
         if (inputText) inputText.value = '';
         const contenedor = document.getElementById('resultado-container');
@@ -27,22 +40,33 @@ document.addEventListener('DOMContentLoaded', () => {
         if (info) info.innerHTML = '';
     }
     if (buscarBtn) buscarBtn.addEventListener('click', manejarClickBuscar);
-    if (buscarBtnAlt) buscarBtnAlt.addEventListener('click', resetearVista);
+    // El botón `.btn-buscard` en realidad limpia/reinicia la vista de búsqueda
+    if (limpiarBusquedaBtn) limpiarBusquedaBtn.addEventListener('click', resetearVista);
     const favoritosBtn = document.querySelector('.btn-favoritos');
     if (favoritosBtn) favoritosBtn.addEventListener('click', mostrarFavoritos);
     const historicoBtn = document.querySelector('.btn-historico');
     if (historicoBtn) historicoBtn.addEventListener('click', mostrarHistorial);
     const vsBtn = document.querySelector('.btn-vs');
     if (vsBtn) vsBtn.addEventListener('click', mostrarVistaVS);
-    console.log('Inicializado buscador:', { buscarBtn, buscarBtnAlt, inputText, tipoBusqueda });
-});
 
+    // Al presionar Enter en el input se ejecuta la búsqueda
+    if (inputText) {
+        inputText.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Enter') {
+                evento.preventDefault();
+                manejarClickBuscar();
+            }
+        });
+    }
+
+    console.log('Inicializado buscador:', { buscarBtn, limpiarBusquedaBtn, inputText, tipoBusqueda });
+});
 
 // Función única para buscar Pokémon por nombre o ID
 function buscarPokemon(query) {
     const queryNormalizado = typeof query === 'string' ? query.toLowerCase() : query;
     const historial = JSON.parse(localStorage.getItem('pokemonHistorial') || '[]');
-    const isLocal = historial.some(item => 
+    const isLocal = historial.some(item =>
         item.type === 'pokemon' && (item.name === queryNormalizado || item.id.toString() === queryNormalizado)
     );
     fetch(`https://pokeapi.co/api/v2/pokemon/${queryNormalizado}`)
@@ -59,7 +83,11 @@ function buscarPokemon(query) {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('No se encontró el Pokémon.');
+            if (error instanceof TypeError) {
+                alert('No se pudo conectar con la PokéAPI. Revisa tu conexión a internet e inténtalo de nuevo.');
+            } else {
+                alert(`No se encontró ningún Pokémon con el nombre o ID "${query}".`);
+            }
         });
 }
 
@@ -73,18 +101,23 @@ function buscarPorHabilidad(habilidad) {
             return response.json();
         })
         .then(data => {
-            mostrarListaPokemonPorHabilidad(data);            // Añadir al historial
-            agregarAHistorial({ type: 'habilidad', name: data.name });        })
+            mostrarListaPokemonPorHabilidad(data);
+            agregarAHistorial({ type: 'habilidad', name: data.name });
+        })
         .catch(error => {
             console.error('Error:', error);
-            alert('No se encontró la habilidad especificada. Ejemplos válidos: "chlorophyll", "overgrow", "1".');
+            if (error instanceof TypeError) {
+                alert('No se pudo conectar con la PokéAPI. Revisa tu conexión a internet e inténtalo de nuevo.');
+            } else {
+                alert(`No se encontró la habilidad "${habilidad}". Ejemplos válidos: "chlorophyll", "overgrow", "1".`);
+            }
         });
 }
 
 function mostrarListaPokemonPorHabilidad(dataHabilidad) {
     const contenedor = document.getElementById('resultado-container');
     const info = document.querySelector('.pokemon-info');
-    
+
     if (contenedor && info) {
         const nombreHabilidad = dataHabilidad.name.toUpperCase().replace(/-/g, ' ');
         const total = dataHabilidad.pokemon.length;
@@ -94,11 +127,11 @@ function mostrarListaPokemonPorHabilidad(dataHabilidad) {
             const nombreDisplay = nombreNormal.toUpperCase().replace(/-/g, ' ');
             const urlParts = p.pokemon.url.split('/');
             const id = urlParts[urlParts.length - 2];
-            const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`; 
+            const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
             return `
-                <div class="evo-ite" title="Ver a ${nombreDisplay}" onclick="buscarPokemon('${nombreNormal}')" style="margin-bottom: 10px;">
-                    <img src="${spriteUrl}" alt="${nombreNormal}" onerror="this.src=''; this.alt='❓';">
-                    <span>${nombreDisplay}</span>
+                <div class="evo-ite" title="Ver a ${escaparHTML(nombreDisplay)}" onclick="buscarPokemon('${escaparHTML(nombreNormal)}')" style="margin-bottom: 10px;">
+                    <img src="${escaparHTML(spriteUrl)}" alt="${escaparHTML(nombreNormal)}" onerror="this.src=''; this.alt='❓';">
+                    <span>${escaparHTML(nombreDisplay)}</span>
                 </div>
             `;
         }).join('');
@@ -106,7 +139,7 @@ function mostrarListaPokemonPorHabilidad(dataHabilidad) {
         const contenido = `
             <div class="poke-header">
                 <h2>HABILIDAD <span class="poke-id">🌟</span></h2>
-                <h3 style="color:#4CAF50; margin-top:5px;">${nombreHabilidad}</h3>
+                <h3 style="color:#4CAF50; margin-top:5px;">${escaparHTML(nombreHabilidad)}</h3>
             </div>
             <div class="poke-evoluciones" style="border-top: none; margin-top: 0; padding-top: 0;">
                 <p style="text-align:center; margin-bottom: 15px;">Pokémon que poseen esta habilidad:</p>
@@ -115,7 +148,7 @@ function mostrarListaPokemonPorHabilidad(dataHabilidad) {
                 </div>
                 ${mensajeLimite}
             </div>
-        `; 
+        `;
         info.innerHTML = contenido;
         contenedor.style.display = 'block';
     }
@@ -124,10 +157,10 @@ function mostrarListaPokemonPorHabilidad(dataHabilidad) {
 function mostrarPokemon(pokemon, isLocal = false) {
     const contenedor = document.getElementById('resultado-container');
     const info = document.querySelector('.pokemon-info');
-    
+
     if (contenedor && info) {
         info.style.position = 'relative';
-        const sourceBadge = isLocal 
+        const sourceBadge = isLocal
             ? `<div style="position: absolute; top: -15px; right: -15px; background-color: #bbfd6b; color: #000; padding: 5px 10px; font-size: 0.8rem; font-weight: 900; border-radius: 0; border: 3px solid #000; box-shadow: 2px 2px 0 0 #000; z-index: 10; transform: rotate(5deg);">📦 LOCAL</div>`
             : `<div style="position: absolute; top: -15px; right: -15px; background-color: aqua; color: #000; padding: 5px 10px; font-size: 0.8rem; font-weight: 900; border-radius: 0; border: 3px solid #000; box-shadow: 2px 2px 0 0 #000; z-index: 10; transform: rotate(5deg);">🌐 API</div>`;
         const idFormateado = '#' + pokemon.id.toString().padStart(4, '0');
@@ -137,7 +170,7 @@ function mostrarPokemon(pokemon, isLocal = false) {
             const porcentaje = Math.min((valor / 255) * 100, 100);
             return `
                 <div class="stat-row">
-                    <span class="stat-name">${s.stat.name.toUpperCase()}</span>
+                    <span class="stat-name">${escaparHTML(s.stat.name.toUpperCase())}</span>
                     <span class="stat-value">${valor}</span>
                     <div class="stat-bar-bg">
                         <div class="stat-bar-fill" style="width: ${porcentaje}%"></div>
@@ -145,14 +178,14 @@ function mostrarPokemon(pokemon, isLocal = false) {
                 </div>
             `;
         }).join('');
-        const tiposHtml = pokemon.types.map(type => `<span class="badge tipo-${type.type.name}">${type.type.name.toUpperCase()}</span>`).join('');
-        const habilidadesHtml = pokemon.abilities.map(ability => `<span class="badge habilidad">${ability.ability.name.toUpperCase()}</span>`).join('');
+        const tiposHtml = pokemon.types.map(type => `<span class="badge tipo-${escaparHTML(type.type.name)}">${escaparHTML(type.type.name.toUpperCase())}</span>`).join('');
+        const habilidadesHtml = pokemon.abilities.map(ability => `<span class="badge habilidad">${escaparHTML(ability.ability.name.toUpperCase())}</span>`).join('');
         const pokemonInfo = `
             ${sourceBadge}
             <div class="poke-header">
-                <h2>${pokemon.name.toUpperCase()} <span class="poke-id">${idFormateado}</span></h2>
+                <h2>${escaparHTML(pokemon.name.toUpperCase())} <span class="poke-id">${idFormateado}</span></h2>
             </div>
-            <img class="poke-sprite" src="${sprite}" alt="${pokemon.name}">
+            <img class="poke-sprite" src="${escaparHTML(sprite)}" alt="${escaparHTML(pokemon.name)}">
             <div class="poke-atributos">
                 <div class="poke-seccion">
                     <h3>Tipo</h3>
@@ -163,7 +196,7 @@ function mostrarPokemon(pokemon, isLocal = false) {
                     <div class="badges-container">${habilidadesHtml}</div>
                 </div>
                 <div class="poke-seccion-acciones" style="margin-top: 15px; text-align: center;">
-                    <button class="btn-agregar-favorito" onclick="agregarFavorito('${pokemon.id}', '${pokemon.name}', '${sprite}')" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                    <button class="btn-agregar-favorito" onclick="agregarFavorito('${escaparHTML(pokemon.id)}', '${escaparHTML(pokemon.name)}', '${escaparHTML(sprite)}')" style="background-color: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">
                         ❤️ Agregar a Favoritos
                     </button>
                 </div>
@@ -215,11 +248,11 @@ async function obtenerEvoluciones(pokemonData) {
                 sprite: data.sprites.front_default,
                 id: data.id,
                 level: evoMeta.level,
-                isCurrent: data.id === pokemonData.id || data.name === evoMeta.name
+                isCurrent: data.id === pokemonData.id
             };
         });
         const evoData = await Promise.all(fetchSprites);
-        mostrarEvoluciones(evoData);  
+        mostrarEvoluciones(evoData);
     } catch (error) {
         const evCont = document.getElementById('lista-evoluciones');
         if (evCont) evCont.innerHTML = `<p>Sin datos de evolución.</p>`;
@@ -253,9 +286,9 @@ function mostrarEvoluciones(evos) {
         const isCurrentClass = evo.isCurrent ? 'evo-actual' : '';
         const displayName = evo.name.toUpperCase().replace(/-/g, ' ');
         const div = `
-            <div class="evo-ite ${isCurrentClass}" title="Ver a ${displayName}" onclick="buscarPokemon('${evo.name}')">
-                <img src="${evo.sprite}" alt="${evo.name}">
-                <span>${displayName}</span>
+            <div class="evo-ite ${isCurrentClass}" title="Ver a ${escaparHTML(displayName)}" onclick="buscarPokemon('${escaparHTML(evo.name)}')">
+                <img src="${escaparHTML(evo.sprite)}" alt="${escaparHTML(evo.name)}">
+                <span>${escaparHTML(displayName)}</span>
             </div>
         `;
         let arrow = '';
@@ -286,19 +319,19 @@ function agregarFavorito(id, nombre, sprite) {
 function mostrarFavoritos() {
     const contenedor = document.getElementById('resultado-container');
     const info = document.querySelector('.pokemon-info');
-    
+
     if (contenedor && info) {
         let favoritos = JSON.parse(localStorage.getItem('pokemonFavoritos') || '[]');
         let listaHtml = favoritos.map(p => {
             const nombreDisplay = p.nombre.toUpperCase().replace(/-/g, ' ');
             const idDisplay = '#' + p.id.toString().padStart(4, '0');
             return `
-                <div class="evo-ite" title="Ver a ${nombreDisplay}" onclick="buscarPokemon('${p.nombre}')" style="margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; max-width: 350px; padding: 5px 15px; border: 1px solid #eee; border-radius: 10px; background-color: #fafafa;">
+                <div class="evo-ite" title="Ver a ${escaparHTML(nombreDisplay)}" onclick="buscarPokemon('${escaparHTML(p.nombre)}')" style="margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; max-width: 350px; padding: 5px 15px; border: 1px solid #eee; border-radius: 10px; background-color: #fafafa;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <img src="${p.sprite}" alt="${p.nombre}" onerror="this.src=''; this.alt='❓';" style="width: 60px; height: 60px;">
-                        <span style="font-weight: bold; font-size: 1.1em;">${nombreDisplay} <span style="color: #888; font-size: 0.8em; margin-left: 5px;">${idDisplay}</span></span>
+                        <img src="${escaparHTML(p.sprite)}" alt="${escaparHTML(p.nombre)}" onerror="this.src=''; this.alt='❓';" style="width: 60px; height: 60px;">
+                        <span style="font-weight: bold; font-size: 1.1em;">${escaparHTML(nombreDisplay)} <span style="color: #888; font-size: 0.8em; margin-left: 5px;">${idDisplay}</span></span>
                     </div>
-                    <button onclick="event.stopPropagation(); eliminarFavorito('${p.id}')" title="Quitar de favoritos" style="background: none; border: none; cursor: pointer; font-size: 1.5em; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                    <button onclick="event.stopPropagation(); eliminarFavorito('${escaparHTML(p.id)}')" title="Quitar de favoritos" style="background: none; border: none; cursor: pointer; font-size: 1.5em; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
                         💔
                     </button>
                 </div>
@@ -320,14 +353,14 @@ function mostrarFavoritos() {
         const contenido = `
             <div class="poke-header">
                 <h2>TUS FAVORITOS ❤️</h2>
-            </div>    
+            </div>
             <div class="poke-evoluciones" style="border-top: none; margin-top: 0; padding-top: 0;">
                 <div class="evoluciones-lista" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                     ${listaHtml}
                 </div>
                 ${btnBorrarTodos}
             </div>
-        `;  
+        `;
         info.innerHTML = contenido;
         contenedor.style.display = 'block';
     }
@@ -337,7 +370,7 @@ function eliminarFavorito(id) {
     let favoritos = JSON.parse(localStorage.getItem('pokemonFavoritos') || '[]');
     favoritos = favoritos.filter(p => p.id !== id);
     localStorage.setItem('pokemonFavoritos', JSON.stringify(favoritos));
-    mostrarFavoritos(); 
+    mostrarFavoritos();
 }
 
 function borrarTodosFavoritos() {
@@ -347,15 +380,12 @@ function borrarTodosFavoritos() {
     }
 }
 
-
-
-
 // ---- Historial ---
 
 function agregarAHistorial(item) {
     let historial = JSON.parse(localStorage.getItem('pokemonHistorial') || '[]');
     historial = historial.filter(i => !(i.type === item.type && i.name === item.name));
-    historial.unshift(item); 
+    historial.unshift(item);
 
     if (historial.length > 50) historial.pop();
     localStorage.setItem('pokemonHistorial', JSON.stringify(historial));
@@ -364,18 +394,18 @@ function agregarAHistorial(item) {
 function mostrarHistorial() {
     const contenedor = document.getElementById('resultado-container');
     const info = document.querySelector('.pokemon-info');
-    
+
     if (contenedor && info) {
-        let historial = JSON.parse(localStorage.getItem('pokemonHistorial') || '[]');   
+        let historial = JSON.parse(localStorage.getItem('pokemonHistorial') || '[]');
         let listaHtml = historial.map((item, index) => {
             const nombreDisplay = item.name.toUpperCase().replace(/-/g, ' ');
             if (item.type === 'pokemon') {
                 const idDisplay = '#' + item.id.toString().padStart(4, '0');
                 return `
-                    <div class="evo-ite" title="Ver a ${nombreDisplay}" onclick="buscarPokemon('${item.name}')" style="margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; max-width: 350px; padding: 5px 15px; border: 1px solid #eee; border-radius: 10px; background-color: #fafafa;">
+                    <div class="evo-ite" title="Ver a ${escaparHTML(nombreDisplay)}" onclick="buscarPokemon('${escaparHTML(item.name)}')" style="margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; max-width: 350px; padding: 5px 15px; border: 1px solid #eee; border-radius: 10px; background-color: #fafafa;">
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <img src="${item.sprite}" alt="${item.name}" onerror="this.src=''; this.alt='👾';" style="width: 60px; height: 60px;">
-                            <span style="font-weight: bold; font-size: 1.1em;">${nombreDisplay} <span style="color: #888; font-size: 0.8em; margin-left: 5px;">${idDisplay}</span></span>
+                            <img src="${escaparHTML(item.sprite)}" alt="${escaparHTML(item.name)}" onerror="this.src=''; this.alt='👾';" style="width: 60px; height: 60px;">
+                            <span style="font-weight: bold; font-size: 1.1em;">${escaparHTML(nombreDisplay)} <span style="color: #888; font-size: 0.8em; margin-left: 5px;">${idDisplay}</span></span>
                         </div>
                         <button onclick="event.stopPropagation(); eliminarHistorial(${index})" title="Quitar del historial" style="background: none; border: none; cursor: pointer; font-size: 1.5em; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
                             ❌
@@ -384,10 +414,10 @@ function mostrarHistorial() {
                 `;
             } else {
                 return `
-                    <div class="evo-ite" title="Ver habilidad ${nombreDisplay}" onclick="buscarPorHabilidad('${item.name}')" style="margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; max-width: 350px; padding: 5px 15px; border: 1px solid #eee; border-radius: 10px; background-color: #eef7ff;">
+                    <div class="evo-ite" title="Ver habilidad ${escaparHTML(nombreDisplay)}" onclick="buscarPorHabilidad('${escaparHTML(item.name)}')" style="margin-bottom: 10px; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; max-width: 350px; padding: 5px 15px; border: 1px solid #eee; border-radius: 10px; background-color: #eef7ff;">
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <div style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 2em;">🌟</div>
-                            <span style="font-weight: bold; font-size: 1.1em; color: #0056b3;">HAB: ${nombreDisplay}</span>
+                            <span style="font-weight: bold; font-size: 1.1em; color: #0056b3;">HAB: ${escaparHTML(nombreDisplay)}</span>
                         </div>
                         <button onclick="event.stopPropagation(); eliminarHistorial(${index})" title="Quitar del historial" style="background: none; border: none; cursor: pointer; font-size: 1.5em; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
                             ❌
@@ -411,14 +441,14 @@ function mostrarHistorial() {
         const contenido = `
             <div class="poke-header">
                 <h2>📜 HISTORIAL DE BÚSQUEDAS</h2>
-            </div>   
+            </div>
             <div class="poke-evoluciones" style="border-top: none; margin-top: 0; padding-top: 0;">
                 <div class="evoluciones-lista" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
                     ${listaHtml}
                 </div>
                 ${btnBorrarTodos}
             </div>
-        `;   
+        `;
         info.innerHTML = contenido;
         contenedor.style.display = 'block';
     }
@@ -428,30 +458,27 @@ function eliminarHistorial(index) {
     let historial = JSON.parse(localStorage.getItem('pokemonHistorial') || '[]');
     historial.splice(index, 1);
     localStorage.setItem('pokemonHistorial', JSON.stringify(historial));
-    mostrarHistorial(); 
+    mostrarHistorial();
 }
 
 function borrarTodoHistorial() {
     if (confirm('¿Estás seguro de que deseas borrar todo tu historial de búsqueda? Esta acción no se puede deshacer.')) {
         localStorage.removeItem('pokemonHistorial');
-        mostrarHistorial(); 
+        mostrarHistorial();
     }
 }
-
-
-
 
 // ---- VS Mode ---
 function mostrarVistaVS() {
     const contenedor = document.getElementById('resultado-container');
     const info = document.querySelector('.pokemon-info');
-    
+
     if (contenedor && info) {
         const contenido = `
             <div class="poke-header" style="border-bottom: 5px solid #000;">
                 <h2>⚔️ MODO VERSUS ⚔️</h2>
             </div>
-            
+
             <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px 0;">
                 <p style="text-align: center; font-weight: bold; color: #333; margin: 0;">¡Elige a tus combatientes!</p>
                 <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 15px;">
@@ -484,7 +511,7 @@ async function realizarVS() {
     const input2 = document.getElementById('vs-pokemon-2').value.trim().toLowerCase();
     const errorDiv = document.getElementById('vs-error');
     const resultadoDiv = document.getElementById('vs-resultado');
-    
+
     if (!input1 || !input2) {
         errorDiv.textContent = 'Por favor, ingresa dos Pokémon para comparar.';
         return;
@@ -504,9 +531,9 @@ async function realizarVS() {
         const statsP1 = poke1.stats.reduce((acc, stat) => acc + stat.base_stat, 0);
         const statsP2 = poke2.stats.reduce((acc, stat) => acc + stat.base_stat, 0);
         const typeData = await obtenerRelacionesDeTipos(poke1.types, poke2.types);
-        
+
         mostrarResultadoVS(poke1, poke2, statsP1, statsP2, typeData);
-        errorDiv.textContent = '';   
+        errorDiv.textContent = '';
     } catch (err) {
         errorDiv.textContent = err.message;
     }
@@ -518,7 +545,7 @@ async function obtenerRelacionesDeTipos(types1, types2) {
         const res = await fetch(attackTypeUrl);
         const data = await res.json();
         const damageRelations = data.damage_relations;
-        
+
         defTypesNames.forEach(defType => {
             if (damageRelations.double_damage_to.some(t => t.name === defType)) mult *= 2;
             if (damageRelations.half_damage_to.some(t => t.name === defType)) mult *= 0.5;
@@ -526,7 +553,7 @@ async function obtenerRelacionesDeTipos(types1, types2) {
         });
         return mult;
     };
-    
+
     const defNames1 = types1.map(t => t.type.name);
     const defNames2 = types2.map(t => t.type.name);
     let bestMultP1 = 0;
@@ -545,13 +572,12 @@ async function obtenerRelacionesDeTipos(types1, types2) {
 function mostrarResultadoVS(poke1, poke2, statsP1, statsP2, typeData) {
     const resDiv = document.getElementById('vs-resultado');
     if (!resDiv) return;
-    
 
     // Ganador por stats
     let ganadorStats = '<span style="color:#555;">Empate</span>';
-    if (statsP1 > statsP2) ganadorStats = `<span style="color:#4CAF50;">🏆 ${poke1.name.toUpperCase()}</span>`;
-    else if (statsP2 > statsP1) ganadorStats = `<span style="color:#4CAF50;">🏆 ${poke2.name.toUpperCase()}</span>`;
-    
+    if (statsP1 > statsP2) ganadorStats = `<span style="color:#4CAF50;">🏆 ${escaparHTML(poke1.name.toUpperCase())}</span>`;
+    else if (statsP2 > statsP1) ganadorStats = `<span style="color:#4CAF50;">🏆 ${escaparHTML(poke2.name.toUpperCase())}</span>`;
+
     const getTypeMultText = (mult) => {
         if (mult > 1) return `<div style="background-color:#bbfd6b; border: 3px solid #000; padding: 5px; font-weight: 900; margin-top:5px; box-shadow: 2px 2px 0 #000;">Súper efectivo (${mult}x)</div>`;
         if (mult === 1) return `<div style="background-color:#eee; border: 3px solid #000; padding: 5px; font-weight: 900; margin-top:5px; box-shadow: 2px 2px 0 #000;">Daño normal (1x)</div>`;
@@ -581,14 +607,14 @@ function mostrarResultadoVS(poke1, poke2, statsP1, statsP2, typeData) {
     const html = `
         <div style="border-top: 5px solid #000; margin-top: 20px; padding-top: 20px;">
             <div style="display: flex; justify-content: space-around; text-align: center; margin-bottom: 20px; align-items: flex-start;">
-                
+
                 <!-- POKEMON 1 -->
                 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; background: #fff; border: 5px solid #000; box-shadow: -5px 5px 0 0 #000; padding: 15px; margin-right: 10px; position: relative;">
                     <span style="position: absolute; top: -15px; left: -15px; background: #000; color: #fff; padding: 5px 10px; font-weight: bold; border: 3px solid #fff; box-shadow: 2px 2px 0 0 #000;">P1</span>
-                    <img src="${poke1.sprites.front_default || ''}" style="width: 140px; height: 140px; background: #f0f0f0; border-radius: 50%; border: 5px solid #000; margin-bottom: 10px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
-                    <h3 style="margin: 0 0 10px; font-size: 1.2rem; font-weight: 900;">${poke1.name.toUpperCase()}</h3>
+                    <img src="${escaparHTML(poke1.sprites.front_default || '')}" style="width: 140px; height: 140px; background: #f0f0f0; border-radius: 50%; border: 5px solid #000; margin-bottom: 10px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+                    <h3 style="margin: 0 0 10px; font-size: 1.2rem; font-weight: 900;">${escaparHTML(poke1.name.toUpperCase())}</h3>
                     <div style="margin-bottom: 10px; display: flex; gap: 5px; flex-wrap: wrap; justify-content: center;">
-                        ${poke1.types.map(t => `<span class="badge tipo-${t.type.name}">${t.type.name.toUpperCase()}</span>`).join('')}
+                        ${poke1.types.map(t => `<span class="badge tipo-${escaparHTML(t.type.name)}">${escaparHTML(t.type.name.toUpperCase())}</span>`).join('')}
                     </div>
                     <div style="font-weight: 900; font-size: 1.1rem; border-top: 2px solid #000; padding-top: 10px; width: 100%;">
                         Stats: ${statsP1}
@@ -598,14 +624,14 @@ function mostrarResultadoVS(poke1, poke2, statsP1, statsP2, typeData) {
                         ${getTypeMultText(typeData.p1M)}
                     </div>
                 </div>
-                
+
                 <!-- POKEMON 2 -->
                 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; background: #fff; border: 5px solid #000; box-shadow: 5px 5px 0 0 #000; padding: 15px; margin-left: 10px; position: relative;">
                     <span style="position: absolute; top: -15px; right: -15px; background: #000; color: #fff; padding: 5px 10px; font-weight: bold; border: 3px solid #fff; box-shadow: -2px 2px 0 0 #000;">P2</span>
-                    <img src="${poke2.sprites.front_default || ''}" style="width: 140px; height: 140px; background: #f0f0f0; border-radius: 50%; border: 5px solid #000; margin-bottom: 10px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
-                    <h3 style="margin: 0 0 10px; font-size: 1.2rem; font-weight: 900;">${poke2.name.toUpperCase()}</h3>
+                    <img src="${escaparHTML(poke2.sprites.front_default || '')}" style="width: 140px; height: 140px; background: #f0f0f0; border-radius: 50%; border: 5px solid #000; margin-bottom: 10px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+                    <h3 style="margin: 0 0 10px; font-size: 1.2rem; font-weight: 900;">${escaparHTML(poke2.name.toUpperCase())}</h3>
                     <div style="margin-bottom: 10px; display: flex; gap: 5px; flex-wrap: wrap; justify-content: center;">
-                        ${poke2.types.map(t => `<span class="badge tipo-${t.type.name}">${t.type.name.toUpperCase()}</span>`).join('')}
+                        ${poke2.types.map(t => `<span class="badge tipo-${escaparHTML(t.type.name)}">${escaparHTML(t.type.name.toUpperCase())}</span>`).join('')}
                     </div>
                     <div style="font-weight: 900; font-size: 1.1rem; border-top: 2px solid #000; padding-top: 10px; width: 100%;">
                         Stats: ${statsP2}
@@ -617,7 +643,7 @@ function mostrarResultadoVS(poke1, poke2, statsP1, statsP2, typeData) {
                 </div>
 
             </div>
-            
+
             <div style="background: #fff; border: 5px solid #000; box-shadow: 5px 5px 0 0 #000; padding: 20px; margin-top: 30px;">
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h3 style="margin: 0; font-weight: 900; background: aqua; display: inline-block; padding: 15px 30px; border: 3px solid #000; transform: rotate(-2deg);">TABLA DE ESTADÍSTICAS</h3>
@@ -636,5 +662,3 @@ function mostrarResultadoVS(poke1, poke2, statsP1, statsP2, typeData) {
     `;
     resDiv.innerHTML = html;
 }
-
-
