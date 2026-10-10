@@ -1,91 +1,51 @@
-# 📁 Proyectos Personales
+# 📚 Estructuras Pila y Cola
 
-Compilación de proyectos académicos y personales que he realizado durante mi
-carrera en la **Licenciatura en Desarrollo y Gestión de Software** (UTP).
+Programa interactivo en **Java** que implementa las estructuras de datos
+**Pila** (`Stack`) y **Cola** (`Queue`) con un menú completo.
 
-Cada proyecto vive en su **propia rama** de este repositorio. Para ver uno,
-cambia de rama:
+## ✨ Funciones
 
-```bash
-git checkout <nombre-de-rama>
-```
+- Menú principal para elegir entre Pila, Cola o salir.
+- **Ingresar** elementos con control de capacidad máxima.
+- **Mostrar** el estado actual, si está vacía y su elemento superior/frontal.
+- **Eliminar** el último elemento de la pila o el primero de la cola, con
+  confirmación previa.
+- Validación de límites: el contenedor admite máximo 6 elementos y la suma
+  acumulada no puede superar 99.
 
-## 📂 Lista de proyectos
+## 🛠️ Compilación y ejecución
 
-| Proyecto | Rama | Lenguaje | Descripción |
-| --- | --- | --- | --- |
-| 🏧 [Cajero](#-cajero) | `proyecto/cajero` | C++ / Qt | Cajero bancario: retiros, depósitos y saldo. |
-| 📚 [Estructura Pila](#-estructura-pila) | `proyecto/estructura-pila` | Java | Menú interactivo de Pilas y Colas. |
-| ⚔️ [Calculadora Genshin](#-calculadora-genshin) | `proyecto/genshin` | Python | Simulador de artefactos 5★ de Genshin Impact. |
-| 🍕 [Urban Slice](#-urban-slice) | `proyecto/pizeria` | HTML / CSS | Página de pizzería con menú destacado. |
-| ⚡ [Pokémon Finder](#-pokémon-finder) | `proyecto/poke-api` | JS | Buscador de Pokémon con modo VS y favoritos. |
-| 📺 [Streaming](#-streaming) | `proyecto/streaming` | C | Calculadora de planes de streaming. |
-
----
-
-## 🏧 Cajero
-
-**Rama:** `proyecto/cajero`
-
-Simulador de cajero bancario en consola con PIN de seguridad, retiros
-preestablecidos, depósitos con validación y consulta de saldo. Incluye un
-ejercicio de interfaz gráfica con Qt.
-
-## 📚 Estructura Pila
-
-**Rama:** `proyecto/estructura-pila`
-
-Programa interactivo que implementa **Pilas** (`Stack`) y **Colas** (`Queue`)
-de Java. Permite ingresar, mostrar y eliminar elementos con menús anidados y
-control de capacidad.
-
-## ⚔️ Calculadora Genshin
-
-**Rama:** `proyecto/genshin`
-
-Simulador de artefactos de 5 estrellas de *Genshin Impact* con interfaz gráfica
-(Tkinter). Simula el subido a +20 y calcula probabilidades de que tus stats
-críticos suban, con 10 000 simulaciones de Monte Carlo.
-
-## 🍕 Urban Slice
-
-**Rama:** `proyecto/pizeria`
-
-Página web de una pizzería con menú de navegación, sección de bienvenida y
-carta destacada con fotos de cada pizza.
-
-## ⚡ Pokémon Finder
-
-**Rama:** `proyecto/poke-api`
-
-Buscador de Pokémon que consume la [PokéAPI](https://pokeapi.co). Permite
-buscar por nombre, ID o habilidad, ver estadísticas y cadena de evolución,
-guardar favoritos, mantener un historial y comparar dos Pokémon en **modo VS**.
-
-## 📺 Streaming
-
-**Rama:** `proyecto/streaming`
-
-Calculadora de tarifas para planes de streaming (Standard, VIP y VIP Plus) en
-función del número de dispositivos, con menú y confirmación de cotización.
-
----
-
-## 🛠️ Cómo usar este repositorio
-
-Cada rama es un proyecto autocontenido con su propio `README` e instrucciones
-de ejecución.
+Necesitas el JDK instalado.
 
 ```bash
-# Ver todas las ramas
-git branch -r
-
-# Entrar a un proyecto
-git checkout proyecto/poke-api
-
-# Volver al índice
-git checkout main
+javac PIla.java
+java PIla
 ```
+
+## 📖 Uso
+
+```text
+________________SELECION________________
+Selecciona 1 para usar pila.
+Selecciona 2 para usar cola.
+Selecciona 3 para terminar el programa.
+```
+
+Dentro de cada estructura:
+
+```text
+________________MENU________________
+Selecciona 1 para Ingresar numero.
+Selecciona 2 para Mostrar.
+Selecciona 3 para Eliminar.
+Selecciona 4 para Salir.
+```
+
+## 📂 Archivos
+
+| Archivo | Descripción |
+| --- | --- |
+| `PIla.java` | Código fuente completo del programa. |
 
 ## 👤 Autor
 
