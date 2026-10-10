@@ -1,27 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Urban Slice</title>
+    <meta
+      name="description"
+      content="Urban Slice: pizzas artesanales hechas con ingredientes frescos. Consulta nuestro menú destacado, promociones, formas de pedido y datos de contacto."
+    />
+    <title>Urban Slice | Pizzas artesanales</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="Contenedor-General">
       <!-- Contenendor del Menu bar -->
-      <img class="img-fondo" src="Chtgpt.png" alt="Fondo de pizza" />
-      <div class="Contenedor-bar">
+      <img
+        class="img-fondo"
+        src="Chtgpt.png"
+        alt="Fondo decorativo de una pizza recién horneada"
+      />
+      <div class="Contenedor-bar" id="inicio">
         <nav>
           <div class="Logo">
             <h1>Urban Slice</h1>
-            <p>Welcome to Urban Slice!</p>
+            <p>¡Bienvenido a Urban Slice!</p>
           </div>
           <ul>
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#">Menú</a></li>
-            <li><a href="#">Promociones</a></li>
-            <li><a href="#">Pedidos</a></li>
-            <li><a href="#">Contacto</a></li>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#menu">Menú</a></li>
+            <li><a href="#promociones">Promociones</a></li>
+            <li><a href="#pedidos">Pedidos</a></li>
+            <li><a href="#contacto">Contacto</a></li>
           </ul>
         </nav>
       </div>
@@ -37,66 +45,127 @@
           </p>
         </div>
 
-        <div class="Contenedor-Menu">
+        <div class="Contenedor-Menu" id="menu">
           <div class="Contenedor-Menu-Encabezado">
             <h3>Menú Destacado</h3>
           </div>
           <ul>
-            <li><h3>Margherita - $10.00</h3></li>
-            <!-- Descripción de la pizza -->
-            <p>
-              Una pizza clásica con salsa de tomate, mozzarella y albahaca
-              fresca.
-            </p>
-            <img
-              class="img-pizza"
-              src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-              alt="Pizza Margherita"
-            />
-            <li><h3>Pizza Pepperoni - $12.00</h3></li>
-            <p>
-              Una pizza sabrosa con salsa de tomate, mozzarella y pepperoni.
-            </p>
-            <img
-              class="img-pizza"
-              src="https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-              alt="Pizza Pepperoni"
-            />
-
-            <li><h3>Pizza Vegetariana - $11.00</h3></li>
-            <p>
-              Una pizza deliciosa con salsa de tomate, mozzarella y una variedad
-              de verduras frescas.
-            </p>
-            <img
-              class="img-pizza"
-              src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-              alt="Pizza Vegetariana"
-            />
-            <li><h3>Pizza BBQ Chicken - $13.00</h3></li>
-            <p>
-              Una pizza con salsa barbacoa, mozzarella, pollo a la parrilla y
-              cebolla roja.
-            </p>
-            <img
-              class="img-pizza"
-              src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-              alt="Pizza BBQ Chicken"
-            />
-            <li><h3>Pizza Cuatro Quesos - $14.00</h3></li>
-
-            <p>
-              Una pizza irresistible con salsa de tomate y una mezcla de
-              mozzarella, cheddar, parmesano y gorgonzola.
-            </p>
-            <img
-              class="img-pizza"
-              src="https://images.unsplash.com/photo-1573821663912-569905455b1c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
-              alt="Pizza Cuatro Quesos"
-            />
+            <li class="Pizza-Destacada">
+              <h3>Margherita - $10.00</h3>
+              <!-- Descripción de la pizza -->
+              <p>
+                Una pizza clásica con salsa de tomate, mozzarella y albahaca
+                fresca.
+              </p>
+              <img
+                class="img-pizza"
+                src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                alt="Pizza Margherita con mozzarella y albahaca fresca"
+              />
+            </li>
+            <li class="Pizza-Destacada">
+              <h3>Pizza Pepperoni - $12.00</h3>
+              <p>
+                Una pizza sabrosa con salsa de tomate, mozzarella y pepperoni.
+              </p>
+              <img
+                class="img-pizza"
+                src="https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                alt="Pizza Pepperoni con pepperoni dorado"
+              />
+            </li>
+            <li class="Pizza-Destacada">
+              <h3>Pizza Vegetariana - $11.00</h3>
+              <p>
+                Una pizza deliciosa con salsa de tomate, mozzarella y una variedad
+                de verduras frescas.
+              </p>
+              <img
+                class="img-pizza"
+                src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                alt="Pizza Vegetariana con verduras frescas"
+              />
+            </li>
+            <li class="Pizza-Destacada">
+              <h3>Pizza BBQ Chicken - $13.00</h3>
+              <p>
+                Una pizza con salsa barbacoa, mozzarella, pollo a la parrilla y
+                cebolla roja.
+              </p>
+              <img
+                class="img-pizza"
+                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                alt="Pizza BBQ Chicken con pollo a la parrilla"
+              />
+            </li>
+            <li class="Pizza-Destacada">
+              <h3>Pizza Cuatro Quesos - $14.00</h3>
+              <p>
+                Una pizza irresistible con salsa de tomate y una mezcla de
+                mozzarella, cheddar, parmesano y gorgonzola.
+              </p>
+              <img
+                class="img-pizza"
+                src="https://images.unsplash.com/photo-1573821663912-569905455b1c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                alt="Pizza Cuatro Quesos con queso derretido"
+              />
+            </li>
           </ul>
         </div>
+
+        <div class="Contenedor-Promociones" id="promociones">
+          <div class="Contenedor-Encabezado">
+            <h3>Promociones</h3>
+          </div>
+          <ul>
+            <li>
+              <h4>2x1 todos los martes</h4>
+              <p>
+                Compra una pizza grande y llévate otra gratis, válida para
+                todas las pizzas del menú destacado.
+              </p>
+            </li>
+            <li>
+              <h4>Combo Familiar - $25.00</h4>
+              <p>
+                Dos pizzas medianas a tu elección, aderezo de la casa y una
+                bebida de 2 litros para compartir.
+              </p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="Contenedor-Contacto" id="contacto">
+          <div class="Contenedor-Encabezado">
+            <h3>Contacto y Pedidos</h3>
+          </div>
+          <div class="Contacto-Grid">
+            <div class="Contacto-Card" id="pedidos">
+              <h4>Haz tu pedido</h4>
+              <p>
+                Llámanos o escríbenos por WhatsApp y agenda tu pedido con
+                anticipación. Entrega en un radio de 5 km.
+              </p>
+              <p>+507 6000-1234</p>
+            </div>
+            <div class="Contacto-Card">
+              <h4>Encuéntranos</h4>
+              <p>Av. Siembra 123, local 4</p>
+              <p>Ciudad de Panamá</p>
+            </div>
+            <div class="Contacto-Card">
+              <h4>Horario</h4>
+              <p>Lunes a domingo</p>
+              <p>11:00 a.m. - 10:00 p.m.</p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Pie de página -->
+      <footer class="Pie-Pagina">
+        <p>© 2026 Urban Slice - Todos los derechos reservados</p>
+      </footer>
     </div>
   </body>
 </html>
