@@ -40,3 +40,6 @@ desktop.ini
 # Gitignore propio de Git
 # -------------------------------
 .gitignore
+
+# Archivos Java compilados
+*.class
