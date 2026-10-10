@@ -1,91 +1,50 @@
-# 📁 Proyectos Personales
+# ⚔️ Calculadora de Artefactos Genshin Impact
 
-Compilación de proyectos académicos y personales que he realizado durante mi
-carrera en la **Licenciatura en Desarrollo y Gestión de Software** (UTP).
+Simulador y calculadora de artefactos de **5 estrellas** de *Genshin Impact*,
+con interfaz gráfica escrita en **Python** con `tkinter`.
 
-Cada proyecto vive en su **propia rama** de este repositorio. Para ver uno,
-cambia de rama:
+## ✨ Funciones
 
-```bash
-git checkout <nombre-de-rama>
-```
+- **Simular a +20:** introduce las estadísticas iniciales exactas de tu
+  artefacto y simula las 5 mejoras (nivel 4, 8, 12, 16 y 20).
+- **Descubrimiento del 4to stat:** si empiezas con 3 substats, el nivel 4
+  revela el cuarto siguiendo las probabilidades oficiales del juego.
+- **Ver probabilidades:** ejecuta 10 000 simulaciones de Monte Carlo y te
+  dice qué porcentaje de mejoras recibió cada stat, y la probabilidad de que
+  tus stats **CRÍTICOS** suban al menos 2 veces.
+- **Consejo automático** según el resultado: si vale la pena subirlo, probar
+  hasta +8 o usarlo como comida de experiencia.
+- Interfaz oscura con tema dorado de artefacto 5★.
 
-## 📂 Lista de proyectos
+## 🛠️ Ejecución
 
-| Proyecto | Rama | Lenguaje | Descripción |
-| --- | --- | --- | --- |
-| 🏧 [Cajero](#-cajero) | `proyecto/cajero` | C++ / Qt | Cajero bancario: retiros, depósitos y saldo. |
-| 📚 [Estructura Pila](#-estructura-pila) | `proyecto/estructura-pila` | Java | Menú interactivo de Pilas y Colas. |
-| ⚔️ [Calculadora Genshin](#-calculadora-genshin) | `proyecto/genshin` | Python | Simulador de artefactos 5★ de Genshin Impact. |
-| 🍕 [Urban Slice](#-urban-slice) | `proyecto/pizeria` | HTML / CSS | Página de pizzería con menú destacado. |
-| ⚡ [Pokémon Finder](#-pokémon-finder) | `proyecto/poke-api` | JS | Buscador de Pokémon con modo VS y favoritos. |
-| 📺 [Streaming](#-streaming) | `proyecto/streaming` | C | Calculadora de planes de streaming. |
-
----
-
-## 🏧 Cajero
-
-**Rama:** `proyecto/cajero`
-
-Simulador de cajero bancario en consola con PIN de seguridad, retiros
-preestablecidos, depósitos con validación y consulta de saldo. Incluye un
-ejercicio de interfaz gráfica con Qt.
-
-## 📚 Estructura Pila
-
-**Rama:** `proyecto/estructura-pila`
-
-Programa interactivo que implementa **Pilas** (`Stack`) y **Colas** (`Queue`)
-de Java. Permite ingresar, mostrar y eliminar elementos con menús anidados y
-control de capacidad.
-
-## ⚔️ Calculadora Genshin
-
-**Rama:** `proyecto/genshin`
-
-Simulador de artefactos de 5 estrellas de *Genshin Impact* con interfaz gráfica
-(Tkinter). Simula el subido a +20 y calcula probabilidades de que tus stats
-críticos suban, con 10 000 simulaciones de Monte Carlo.
-
-## 🍕 Urban Slice
-
-**Rama:** `proyecto/pizeria`
-
-Página web de una pizzería con menú de navegación, sección de bienvenida y
-carta destacada con fotos de cada pizza.
-
-## ⚡ Pokémon Finder
-
-**Rama:** `proyecto/poke-api`
-
-Buscador de Pokémon que consume la [PokéAPI](https://pokeapi.co). Permite
-buscar por nombre, ID o habilidad, ver estadísticas y cadena de evolución,
-guardar favoritos, mantener un historial y comparar dos Pokémon en **modo VS**.
-
-## 📺 Streaming
-
-**Rama:** `proyecto/streaming`
-
-Calculadora de tarifas para planes de streaming (Standard, VIP y VIP Plus) en
-función del número de dispositivos, con menú y confirmación de cotización.
-
----
-
-## 🛠️ Cómo usar este repositorio
-
-Cada rama es un proyecto autocontenido con su propio `README` e instrucciones
-de ejecución.
+Necesitas Python 3. `tkinter` viene incluido en la instalación estándar.
 
 ```bash
-# Ver todas las ramas
-git branch -r
-
-# Entrar a un proyecto
-git checkout proyecto/poke-api
-
-# Volver al índice
-git checkout main
+python calculadora_artefactos.py
 ```
+
+> **Nota:** en algunas distribuciones de Linux hay que instalar tkinter por
+> separado: `sudo apt install python3-tk`.
+
+## 📖 Uso
+
+1. Elige el **tipo de artefacto** (Flor, Pluma, Reloj, Cáliz o Corona).
+2. Selecciona el **stat principal** correspondiente.
+3. Ingresa tus **substats de nivel 0** con sus valores exactos (mínimo 3).
+4. Pulsa **🎲 Simular a +20** o **📊 Ver Probabilidades**.
+
+## 🧮 Datos del juego
+
+Los valores de substat y sus pesos de probabilidad están basados en artefactos
+de 5 estrellas. Se pueden ajustar en los diccionarios `VALORES_SUBSTATS` y
+`PESOS_SUBSTATS` al inicio del archivo.
+
+## 📂 Archivos
+
+| Archivo | Descripción |
+| --- | --- |
+| `calculadora_artefactos.py` | Aplicación completa con interfaz Tkinter. |
 
 ## 👤 Autor
 
